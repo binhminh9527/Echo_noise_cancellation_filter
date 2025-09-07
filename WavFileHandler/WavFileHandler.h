@@ -2,8 +2,6 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include "../EcnrLib/EcnrLib.h"
-
 
 struct WAVHeader {
     char riff[4];
