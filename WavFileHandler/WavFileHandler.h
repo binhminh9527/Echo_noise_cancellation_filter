@@ -26,7 +26,7 @@ public:
     WavFileHandler(const std::string& filename);
     ~WavFileHandler();
     const WAVHeader& getHeader() const { return header_; }
-    int32_t** getChannelBuffers() const { return channelBuffers_; }
+    int32_t* getChannelBuffers(int channel) const;
     size_t getSamplesPerChannel() const { return samplesPerChannel_; }
     size_t getNumChannels() const { return numChannels_; }
 

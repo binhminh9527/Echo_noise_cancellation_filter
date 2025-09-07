@@ -21,6 +21,13 @@ WavFileHandler::~WavFileHandler() {
     }
 }
 
+int32_t* WavFileHandler::getChannelBuffers(int channel) const {
+     if (channel >= numChannels_) {
+         return nullptr;
+     }
+     return channelBuffers_[channel]; 
+}
+
 bool WavFileHandler::readWavFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
     if (!file) {

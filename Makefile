@@ -1,31 +1,37 @@
+
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -I./WavFileHandler -I./EcnrLib
 LDFLAGS =
 
+OUT_DIR = out
+
 # Shared library for EcnrLib
-EcnrLib_OBJS = EcnrLib/EcnrLib.o
-EcnrLib_TARGET = libEcnrLib.so
+EcnrLib_OBJS = $(OUT_DIR)/EcnrLib.o
+EcnrLib_TARGET = $(OUT_DIR)/libEcnrLib.so
 
 # Test app
-TEST_OBJS = main.o WavFileHandler/WavFileHandler.o
-TEST_TARGET = test_app
+TEST_OBJS = $(OUT_DIR)/main.o $(OUT_DIR)/WavFileHandler.o
+TEST_TARGET = $(OUT_DIR)/test_app
 
-all: $(TEST_TARGET) $(EcnrLib_TARGET)
+all: $(OUT_DIR) $(TEST_TARGET) $(EcnrLib_TARGET)
+
+$(OUT_DIR):
+	mkdir -p $(OUT_DIR)
 
 $(EcnrLib_TARGET): $(EcnrLib_OBJS)
 	$(CXX) -shared -o $@ $^
 
 $(TEST_TARGET): $(TEST_OBJS) $(EcnrLib_TARGET)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -L. -lEcnrLib
+	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(OUT_DIR) -lEcnrLib
 
-main.o: main.cpp
+$(OUT_DIR)/main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-WavFileHandler/WavFileHandler.o: WavFileHandler/WavFileHandler.cpp WavFileHandler/WavFileHandler.h
+$(OUT_DIR)/WavFileHandler.o: WavFileHandler/WavFileHandler.cpp WavFileHandler/WavFileHandler.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-EcnrLib/EcnrLib.o: EcnrLib/EcnrLib.cpp EcnrLib/EcnrLib.h
+$(OUT_DIR)/EcnrLib.o: EcnrLib/EcnrLib.cpp EcnrLib/EcnrLib.h
 	$(CXX) $(CXXFLAGS) -fPIC -c $< -o $@
 
 clean:
-	rm -f $(TEST_TARGET) $(EcnrLib_TARGET) *.o WavFileHandler/*.o EcnrLib/*.o
+	rm -rf $(OUT_DIR)/*
