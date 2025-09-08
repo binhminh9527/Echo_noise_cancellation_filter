@@ -1,9 +1,13 @@
+
 #pragma once
 #include <vector>
 #include <cstdint>
+#include "FIRFilter/FIRFilter.h"
 
 class EcnrLib {
 public:
-    // Example echo noise cancellation function
-    static void echoNoiseCancellation(std::vector<int16_t>& input1, std::vector<int16_t>& input2, std::vector<int16_t>& output);
+    EcnrLib(const std::vector<float>& firCoeffs);
+    float echoNoiseCancellation(float refSample, float micSample);
+private:
+    FIRFilter fir_;
 };

@@ -5,20 +5,19 @@
 
 
 int main() {
-    std::string filename1 = "/workspaces/Echo_noise_cancellation_filter/input1.wav";
-    std::string filename2 = "/workspaces/Echo_noise_cancellation_filter/input1.wav";
+    std::string RefSignalpath  = "/workspaces/Echo_noise_cancellation_filter/RefSignal.wav";
+    std::string MicInputpath = "/workspaces/Echo_noise_cancellation_filter/MicInput.wav";
 
-    WavFileHandler wav1(filename1);
-    WavFileHandler wav2(filename2);
+    WavFileHandler RefSignal_wav(RefSignalpath);
+    WavFileHandler MicInput_wav(MicInputpath);
 
-    if (wav1.getNumChannels() == 0 || wav2.getNumChannels() == 0) {
+    if (RefSignal_wav.getNumChannels() == 0 || MicInput_wav.getNumChannels() == 0) {
         std::cerr << "Failed to read one or both WAV files." << std::endl;
         return 1;
     }
 
-    // Example: Access channel buffers
-    // float* channel1_data = wav1.getChannelBuffers(0);
-    // float* channel2_data = wav2.getChannelBuffers(0);
+    AudioChannel* RefSignal = RefSignal_wav.getChannel(0);
+    AudioChannel* MicInput = MicInput_wav.getChannel(0);
 
     // Call echo noise cancellation function here
     // echoNoiseCancellation(channel1_data, channel2_data, ...);

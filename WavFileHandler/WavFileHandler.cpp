@@ -1,7 +1,6 @@
 
 
 #include "WavFileHandler.h"
-#include "AudioChannel/AudioChannel.h"
 #include <fstream>
 #include <iostream>
 #include <cstring>

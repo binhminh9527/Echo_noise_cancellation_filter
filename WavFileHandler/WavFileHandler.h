@@ -1,7 +1,9 @@
+
 #pragma once
 #include <vector>
 #include <string>
 #include <cstdint>
+#include "AudioChannel.h"
 
 struct WAVHeader {
     char riff[4];
