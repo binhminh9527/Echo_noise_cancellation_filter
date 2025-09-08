@@ -24,13 +24,14 @@ public:
     WavFileHandler(const std::string& filename);
     ~WavFileHandler();
     const WAVHeader& getHeader() const { return header_; }
-    int32_t* getChannelBuffers(int channel) const;
+    AudioChannel* getChannel(int channel) const;
     size_t getSamplesPerChannel() const { return samplesPerChannel_; }
     size_t getNumChannels() const { return numChannels_; }
+    bool saveWavFile(const std::string& filename) const;
 
 private:
     WAVHeader header_;
-    int32_t** channelBuffers_ = nullptr; // Array of pointers to int32_t buffers
+    AudioChannel** channels_ = nullptr; // Array of pointers to AudioChannel
     size_t samplesPerChannel_ = 0;
     size_t numChannels_ = 0;
     bool readWavFile(const std::string& filename);

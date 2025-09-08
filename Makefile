@@ -1,6 +1,6 @@
 
 CXX = g++
-INCLUDE_DIRS = -I./EcnrLib -I./WavFileHandler
+INCLUDE_DIRS = -I./EcnrLib -I./WavFileHandler -I./AudioChannel
 CXXFLAGS = -std=c++17 -Wall $(INCLUDE_DIRS)
 LDFLAGS =
 

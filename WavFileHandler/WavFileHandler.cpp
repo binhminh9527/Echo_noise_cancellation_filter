@@ -1,6 +1,7 @@
 
 
 #include "WavFileHandler.h"
+#include "AudioChannel/AudioChannel.h"
 #include <fstream>
 #include <iostream>
 #include <cstring>
@@ -13,20 +14,16 @@ WavFileHandler::WavFileHandler(const std::string& filename) {
 }
 
 WavFileHandler::~WavFileHandler() {
-    if (channelBuffers_) {
+    if (channels_) {
         for (size_t ch = 0; ch < numChannels_; ++ch) {
-            delete[] channelBuffers_[ch];
+            delete channels_[ch];
         }
-        delete[] channelBuffers_;
+        delete[] channels_;
     }
 }
 
-int32_t* WavFileHandler::getChannelBuffers(int channel) const {
-     if (channel >= numChannels_) {
-         return nullptr;
-     }
-     return channelBuffers_[channel]; 
-}
+// Removed getChannelBuffers; use getChannel instead
+
 
 bool WavFileHandler::readWavFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
@@ -44,28 +41,30 @@ bool WavFileHandler::readWavFile(const std::string& filename) {
     samplesPerChannel_ = (header_.dataSize / (header_.bitsPerSample / 8)) / numChannels_;
     size_t numSamples = samplesPerChannel_ * numChannels_;
 
-    channelBuffers_ = new int32_t*[numChannels_];
+    channels_ = new AudioChannel*[numChannels_];
     for (size_t ch = 0; ch < numChannels_; ++ch) {
-        channelBuffers_[ch] = new int32_t[samplesPerChannel_];
+        channels_[ch] = new AudioChannel(samplesPerChannel_);
     }
 
     if (header_.bitsPerSample == 16) {
         int16_t* allSamples = new int16_t[numSamples];
         file.read(reinterpret_cast<char*>(allSamples), header_.dataSize);
-        // Deinterleave and convert to int32_t
+        // Deinterleave and convert to float
         for (size_t ch = 0; ch < numChannels_; ++ch) {
+            float* channelData = channels_[ch]->data();
             for (size_t i = 0; i < samplesPerChannel_; ++i) {
-                channelBuffers_[ch][i] = static_cast<int32_t>(allSamples[i * numChannels_ + ch]);
+                channelData[i] = static_cast<float>(allSamples[i * numChannels_ + ch]) / 32768.0f;
             }
         }
         delete[] allSamples;
     } else if (header_.bitsPerSample == 32) {
         int32_t* allSamples = new int32_t[numSamples];
         file.read(reinterpret_cast<char*>(allSamples), header_.dataSize);
-        // Deinterleave
+        // Deinterleave and convert to float
         for (size_t ch = 0; ch < numChannels_; ++ch) {
+            float* channelData = channels_[ch]->data();
             for (size_t i = 0; i < samplesPerChannel_; ++i) {
-                channelBuffers_[ch][i] = allSamples[i * numChannels_ + ch];
+                channelData[i] = static_cast<float>(allSamples[i * numChannels_ + ch]) / 2147483648.0f;
             }
         }
         delete[] allSamples;
@@ -75,3 +74,40 @@ bool WavFileHandler::readWavFile(const std::string& filename) {
     }
     return true;
 }
+AudioChannel* WavFileHandler::getChannel(int channel) const {
+    if (channel < 0 || static_cast<size_t>(channel) >= numChannels_) return nullptr;
+    return channels_[channel];
+}
+bool WavFileHandler::saveWavFile(const std::string& filename) const {
+    std::ofstream file(filename, std::ios::binary);
+    if (!file) {
+        std::cerr << "Cannot open file for writing: " << filename << std::endl;
+        return false;
+    }
+    // Write header
+    file.write(reinterpret_cast<const char*>(&header_), sizeof(WAVHeader));
+
+    // Interleave and convert float data back to PCM
+    if (header_.bitsPerSample == 16) {
+        for (size_t i = 0; i < samplesPerChannel_; ++i) {
+            for (size_t ch = 0; ch < numChannels_; ++ch) {
+                float sample = channels_[ch]->data()[i];
+                int16_t pcm = static_cast<int16_t>(std::max(-32768.0f, std::min(32767.0f, sample * 32768.0f)));
+                file.write(reinterpret_cast<const char*>(&pcm), sizeof(int16_t));
+            }
+        }
+    } else if (header_.bitsPerSample == 32) {
+        for (size_t i = 0; i < samplesPerChannel_; ++i) {
+            for (size_t ch = 0; ch < numChannels_; ++ch) {
+                float sample = channels_[ch]->data()[i];
+                int32_t pcm = static_cast<int32_t>(std::max(-2147483648.0f, std::min(2147483647.0f, sample * 2147483648.0f)));
+                file.write(reinterpret_cast<const char*>(&pcm), sizeof(int32_t));
+            }
+        }
+    } else {
+        std::cerr << "Only 16-bit and 32-bit PCM WAV files are supported for saving." << std::endl;
+        return false;
+    }
+    return true;
+}
+    
