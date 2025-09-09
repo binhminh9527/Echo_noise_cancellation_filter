@@ -26,3 +26,7 @@ void FIRFilter::updateCoeffs(const std::vector<float>& newCoeffs) {
     buffer_.assign(coeffs_.size(), 0.0f);
     index_ = 0;
 }
+
+std::vector<float>* FIRFilter::getCoeffs()  {
+    return &coeffs_;
+}

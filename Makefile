@@ -1,6 +1,6 @@
 
 CXX = g++
-INCLUDE_DIRS = -I./EcnrLib -I./WavFileHandler -I./AudioChannel
+INCLUDE_DIRS = -I./EcnrLib -I./WavFileHandler -I./AudioChannel -I./FIRFilter
 CXXFLAGS = -std=c++17 -Wall $(INCLUDE_DIRS)
 LDFLAGS =
 
@@ -12,7 +12,7 @@ EcnrLib_OBJS = $(OUT_DIR)/EcnrLib.o $(OUT_DIR)/FIRFilter.o
 EcnrLib_TARGET = $(OUT_DIR)/libEcnrLib.so
 
 # Test app
-TEST_OBJS = $(OUT_DIR)/main.o $(OUT_DIR)/WavFileHandler.o $(OUT_DIR)/AudioChannel.o
+TEST_OBJS = $(OUT_DIR)/main.o $(OUT_DIR)/WavFileHandler.o $(OUT_DIR)/AudioChannel.o $(OUT_DIR)/EcnrLib.o $(OUT_DIR)/FIRFilter.o
 
 TEST_TARGET = $(OUT_DIR)/test_app
 
@@ -27,8 +27,8 @@ $(OUT_DIR)/FIRFilter.o: FIRFilter/FIRFilter.cpp FIRFilter/FIRFilter.h
 $(EcnrLib_TARGET): $(EcnrLib_OBJS)
 	$(CXX) -shared -o $@ $^
 
-$(TEST_TARGET): $(TEST_OBJS) $(EcnrLib_TARGET)
-	$(CXX) $(CXXFLAGS) -o $@ $(TEST_OBJS) -L$(OUT_DIR) -lEcnrLib
+$(TEST_TARGET): $(TEST_OBJS) $(EcnrLib_OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(TEST_OBJS) -L$(OUT_DIR)
 
 $(OUT_DIR)/main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

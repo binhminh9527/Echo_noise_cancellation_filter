@@ -7,6 +7,7 @@ public:
     float process(float inputSample);
     void reset();
     void updateCoeffs(const std::vector<float>& newCoeffs);
+    std::vector<float>* getCoeffs();
 private:
     std::vector<float> coeffs_;
     std::vector<float> buffer_;
