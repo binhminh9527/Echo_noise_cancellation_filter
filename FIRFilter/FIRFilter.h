@@ -8,6 +8,8 @@ public:
     void reset();
     void updateCoeffs(const std::vector<float>& newCoeffs);
     std::vector<float>* getCoeffs();
+    std::vector<float>* getBuffer();
+    size_t* getindex();
 private:
     std::vector<float> coeffs_;
     std::vector<float> buffer_;

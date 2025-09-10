@@ -30,3 +30,11 @@ void FIRFilter::updateCoeffs(const std::vector<float>& newCoeffs) {
 std::vector<float>* FIRFilter::getCoeffs()  {
     return &coeffs_;
 }
+
+std::vector<float>* FIRFilter::getBuffer()  {
+    return &buffer_;
+}
+
+size_t* FIRFilter::getindex()  {
+    return &index_;
+}
