@@ -1,6 +1,6 @@
 #include "EcnrLib.h"
 
-EcnrLib::EcnrLib(): fir_(std::vector<float>(7200, 0.0f)) //create a vector with length = 1/48000 * 0.15 * 48000 = 0.15 * 48000 = 7200
+EcnrLib::EcnrLib(): fir_(std::vector<float>(3000, 0.0f)) //create a vector with length = 1/48000 * 0.15 * 48000 = 0.15 * 48000 = 7200
 {
 }
 
