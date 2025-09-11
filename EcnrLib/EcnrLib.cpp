@@ -33,7 +33,7 @@ void EcnrLib::RLSFirUpdate(float out_fir, float micSample) {
     // Get X_M(n) from fir_buffer_ (current state)
     for (size_t i = 0; i < N; ++i) {
         // X[0] is the latest sample, X[N-1] is the oldest
-        size_t idx = ((*fir_index_) + N - 1 - i + N) % N;
+        size_t idx = ((*fir_index_) + N - i) % N;
         X[i] = (*fir_buffer_)[idx];
     }
 
