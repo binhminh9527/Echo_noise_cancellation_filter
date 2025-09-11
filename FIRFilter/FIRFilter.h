@@ -1,5 +1,7 @@
+
 #pragma once
 #include <vector>
+#include "Logging/Logging.h"
 
 class FIRFilter {
 public:

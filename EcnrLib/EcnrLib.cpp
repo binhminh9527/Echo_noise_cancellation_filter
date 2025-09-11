@@ -87,6 +87,7 @@ void EcnrLib::RLSFirUpdate(float out_fir, float micSample) {
 
 float EcnrLib::process(float refSample, float micSample) {
     // Example: apply FIR filter to micSample - refSample
+    LOG("Minh");
     float output = 0.0f;
     float out_fir = fir_.process(refSample);
 

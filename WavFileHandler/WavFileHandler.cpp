@@ -1,5 +1,3 @@
-
-
 #include "WavFileHandler.h"
 #include <fstream>
 #include <iostream>
@@ -9,6 +7,34 @@
 WavFileHandler::WavFileHandler(const std::string& filename) {
     if (!readWavFile(filename)) {
         std::cerr << "Failed to read WAV file: " << filename << std::endl;
+    }
+}
+
+WavFileHandler::WavFileHandler(const std::vector<float>& data) {
+    size_t size = data.size();
+    // Setup header for mono, 48000Hz, 16-bit PCM
+    std::memset(&header_, 0, sizeof(WAVHeader));
+    std::memcpy(header_.riff, "RIFF", 4);
+    std::memcpy(header_.wave, "WAVE", 4);
+    std::memcpy(header_.fmt, "fmt ", 4);
+    header_.chunkSize = 36 + size * 2;
+    header_.subchunk1Size = 16;
+    header_.audioFormat = 1;
+    header_.numChannels = 1;
+    header_.sampleRate = 48000;
+    header_.byteRate = 48000 * 2;
+    header_.blockAlign = 2;
+    header_.bitsPerSample = 16;
+    std::memcpy(header_.data, "data", 4);
+    header_.dataSize = size * 2;
+
+    numChannels_ = 1;
+    samplesPerChannel_ = size;
+    channels_ = new AudioChannel*[1];
+    channels_[0] = new AudioChannel(size);
+    float* channelData = channels_[0]->data();
+    for (size_t i = 0; i < size; ++i) {
+        channelData[i] = data[i];
     }
 }
 

@@ -27,11 +27,14 @@ int main() {
     float* micData = MicInput->data();
     size_t numSamples = std::min(RefSignal->numSamples(), MicInput->numSamples());
     for (size_t i = 0; i < numSamples; ++i) {
+        LOG_INTERVAL(i, numSamples, 1);
         float outputSample = ecnr.process(refData[i], micData[i]);
         output_vec.push_back(outputSample);
-        // Here you can store or process the outputSample as needed
     }
     
-    std::cout << "WAV files read successfully." << std::endl;
+    // Save output_vec to test_result.wav
+    WavFileHandler result_wav(output_vec);
+    result_wav.saveWavFile("test_result.wav");
+    std::cout << "WAV files read successfully and result saved to test_result.wav." << std::endl;
     return 0;
 }

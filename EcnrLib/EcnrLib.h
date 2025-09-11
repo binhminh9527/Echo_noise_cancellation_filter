@@ -1,8 +1,10 @@
 
+
 #pragma once
 #include <vector>
 #include <cstdint>
 #include "FIRFilter.h"
+#include "Logging/Logging.h"
 
 class EcnrLib {
 public:

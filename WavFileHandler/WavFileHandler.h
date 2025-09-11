@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdint>
 #include "AudioChannel.h"
+#include "Logging/Logging.h"
 
 struct WAVHeader {
     char riff[4];
@@ -24,6 +25,7 @@ struct WAVHeader {
 class WavFileHandler {
 public:
     WavFileHandler(const std::string& filename);
+    WavFileHandler(const std::vector<float>& data);
     ~WavFileHandler();
     const WAVHeader& getHeader() const { return header_; }
     AudioChannel* getChannel(int channel) const;
