@@ -10,5 +10,5 @@
 } while(0)
 #else
 #define LOG(fmt, ...)
-#define LOG_INTERVAL(var, total)
+#define LOG_INTERVAL(var, total, interval)
 #endif
