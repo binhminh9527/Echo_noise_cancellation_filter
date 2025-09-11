@@ -6,7 +6,7 @@
 
 int main() {
     EcnrLib ecnr;
-    std::string RefSignalpath  = "TestSignalGenerator/desired.wav";
+    std::string RefSignalpath  = "TestSignalGenerator/desired_modulated.wav";
     std::string MicInputpath = "TestSignalGenerator/ref_from_speaker.wav";
 
     WavFileHandler RefSignal_wav(RefSignalpath);
@@ -26,7 +26,7 @@ int main() {
     float* refData = RefSignal->data();
     float* micData = MicInput->data();
     size_t numSamples = std::min(RefSignal->numSamples(), MicInput->numSamples());
-    for (size_t i = 0; i < numSamples; ++i) {
+    for (size_t i = 0; i < 8000/*numSamples*/; ++i) {
         LOG_INTERVAL(i, numSamples, 1);
         float outputSample = ecnr.process(refData[i], micData[i]);
         output_vec.push_back(outputSample);
