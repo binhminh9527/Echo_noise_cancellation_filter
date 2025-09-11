@@ -28,7 +28,7 @@ def write_wav(filename, data, framerate):
 
 def main():
     # Read both files
-    desired, sr = read_wav('desired.wav')
+    desired, sr = read_wav('desired_modulated.wav')
     ref, sr_ref = read_wav('ref_from_speaker.wav')
     assert sr == sr_ref, "Sample rates must match"
 
@@ -37,7 +37,7 @@ def main():
     delay_samples = int(sr * delay_ms / 1000)
     gain = db_to_amplitude(-4)
     ref_delayed = np.concatenate((np.zeros(delay_samples), ref[:-delay_samples]))
-    ref_delayed = ref_delayed * gain
+    ref_delayed = ref_delayed * gain/2
 
     # Add white noise
     noise = create_white_noise(len(ref_delayed), amplitude=0.05 * np.max(np.abs(ref_delayed)))

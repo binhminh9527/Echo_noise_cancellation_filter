@@ -27,7 +27,7 @@ void EcnrLib::RLSFirUpdate(float out_fir, float micSample) {
     // X_M(n) is the state vector (fir_buffer_)
     // P_M(n-1) is the covariance matrix (P)
     // w is a regularization parameter, e.g., 0.01
-    float w = 0.01f;
+    float w = 0.05f;
     size_t N = fir_coeef->size();
     std::vector<float> X(N);
     // Get X_M(n) from fir_buffer_ (current state)
@@ -58,9 +58,9 @@ void EcnrLib::RLSFirUpdate(float out_fir, float micSample) {
     // P_M(n) = (1/w) [P_M(n-1) - K_M(n) X^t_M(n) P_M(n-1)]
     // Compute X^t_M(n) P_M(n-1): this is a row vector
     std::vector<float> XtP(N, 0.0f);
-    for (size_t j = 0; j < N; ++j) {
-        for (size_t i = 0; i < N; ++i) {
-            XtP[j] += X[i] * P[i][j];
+    for (size_t i = 0; i < N; ++i) {
+        for (size_t j = 0; j < N; ++j) {
+            XtP[i] += X[j] * P[j][i];
         }
     }
     // Compute K_M(n) X^t_M(n) P_M(n-1): this is an NxN matrix

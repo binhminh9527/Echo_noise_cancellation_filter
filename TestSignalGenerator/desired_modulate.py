@@ -22,7 +22,7 @@ def write_wav(filename, data, framerate):
 def modulate_desired(input_file, output_file):
     data, sr = read_wav(input_file)
     t = np.arange(len(data)) / sr
-    modulator = 0.5 + np.sin(2 * np.pi * 100 * t)
+    modulator = 0.2 + np.sin(2 * np.pi * 10 * t)
     modulated = data * modulator
     # Normalize to int16 range
     modulated = modulated / np.max(np.abs(modulated)) * 32767
