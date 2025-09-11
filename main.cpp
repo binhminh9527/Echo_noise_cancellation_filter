@@ -6,8 +6,8 @@
 
 int main() {
     EcnrLib ecnr;
-    std::string RefSignalpath  = "/workspaces/Echo_noise_cancellation_filter/RefSignal.wav";
-    std::string MicInputpath = "/workspaces/Echo_noise_cancellation_filter/MicInput.wav";
+    std::string RefSignalpath  = "TestSignalGenerator/desired.wav";
+    std::string MicInputpath = "TestSignalGenerator/ref_from_speaker.wav";
 
     WavFileHandler RefSignal_wav(RefSignalpath);
     WavFileHandler MicInput_wav(MicInputpath);
